@@ -1,17 +1,18 @@
 import sys
 import sqlite3
 
-from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QWidget
+from main_ui import Ui_MainWindow
+from addEditCoffeeForm import Ui_Form
 
-con = sqlite3.connect('coffe.sqlite')
+con = sqlite3.connect('data/coffe.sqlite')
 cur = con.cursor()
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('main.ui', self)
+        self.setupUi(self)
         self.load_table()
         self.btn_add_edit.clicked.connect(self.open_window_add_edit)
 
@@ -46,10 +47,10 @@ class MainWindow(QMainWindow):
                     i, j, QTableWidgetItem(str(elem)))
 
 
-class AddEditWindow(QWidget):
+class AddEditWindow(QWidget, Ui_Form):
     def __init__(self, *args):
         super().__init__()
-        uic.loadUi('addEditCoffeeForm.ui', self)
+        self.setupUi(self)
         for typ in cur.execute('SELECT type FROM grind'):
             self.comboBox_grind.addItem(typ[0])
         if args:
